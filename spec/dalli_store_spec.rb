@@ -6,6 +6,7 @@ describe APICache::DalliStore do
   before :each do
     @dalli = Dalli::Client.new('localhost:11211')
     @dalli.delete('foo')
+    @dalli.delete('foo_created_at')
     @store = APICache::DalliStore.new(@dalli)
   end
 
@@ -21,7 +22,7 @@ describe APICache::DalliStore do
   end
 
   it 'should allow checking whether a given amount of time has passed since the key was set' do
-    @store.expired?('foo', 1).should be_false
+    @store.expired?('foo', 1).should be_true
     @store.set('foo', 'bar')
     @store.expired?('foo', 1).should be_false
     sleep 1
